@@ -1,0 +1,17 @@
+.create__note__container {
+  background-color: #f5f5f5;
+  border-radius: 16px;
+  box-shadow: 2px 4px 16px #20356278;
+  opacity: 0.8;
+  padding: 50px 30px 30px;
+}
+.create__note__wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin-top: 20px;
+}
+/* .create__note__wrapper input {
+    display: block;
+    width: 100%;
+} */

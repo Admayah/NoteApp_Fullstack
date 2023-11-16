@@ -1,0 +1,40 @@
+.sidebar__container {
+  width: 354px;
+  height: 100vh;
+  background-color: #f5f5f5;
+  position: fixed;
+  left: 0;
+  padding: 0 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 60px;
+  padding-top: 65px;
+}
+.logo {
+  color: #203562;
+  font-size: 40px;
+  font-weight: 600;
+  line-height: 33.6px;
+  white-space: nowrap;
+  text-align: center;
+}
+
+.menu__item__wrapper {
+  width: 100%;
+}
+.menu__item {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 8px 16px;
+  background-color: #203562;
+  border-radius: 10px;
+}
+.menu__item span {
+  color: #f5f5f5;
+  font-size: 24px;
+  font-weight: 500;
+  line-height: 33.6px;
+  letter-spacing: 0;
+  white-space: nowrap;
+}

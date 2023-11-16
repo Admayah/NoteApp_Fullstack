@@ -22,7 +22,7 @@ const NoteService = {
 
   addNote: async (title: string, content: string): Promise<Note> => {
     try {
-      const response = await fetch(`${BASE_URL}/notes`, {
+      const response = await fetch(`${BASE_URL}/note`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
