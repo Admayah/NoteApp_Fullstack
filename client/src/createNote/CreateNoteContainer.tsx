@@ -1,5 +1,4 @@
-import { useState, useEffect } from "react";
-
+import React, { useState, useEffect } from "react";
 import NoteService from "../NoteService";
 import "./style.css";
 
@@ -9,26 +8,25 @@ type Note = {
   content: string;
 };
 
-const CreateNoteContainer = () => {
-  const [notes, setNotes] = useState<Note[]>([]);
+const CreateNoteContainer = ({ onCreate, initialNote, setNotes }) => {
   const [title, setTitle] = useState<string>("");
   const [content, setContent] = useState<string>("");
   const [selectedNote, setSelectedNote] = useState<Note | null>(null);
 
-
-
-  const handleNoteClick = (note: Note) => {
-    setSelectedNote(note);
-    setTitle(note.title);
-    setContent(note.content);
-  };
+  useEffect(() => {
+    if (initialNote) {
+      setTitle(initialNote.title);
+      setContent(initialNote.content);
+      setSelectedNote(initialNote);
+    }
+  }, [initialNote]);
+  
 
   const handleAddNote = async (event: React.FormEvent) => {
     event.preventDefault();
-    console.log("hhhhh");
     try {
       const newNote = await NoteService.addNote(title, content);
-      setNotes([newNote, ...notes]);
+      onCreate(newNote); // Trigger the callback to update the parent state
       setTitle("");
       setContent("");
     } catch (error) {
@@ -38,7 +36,6 @@ const CreateNoteContainer = () => {
 
   const handleUpdateNote = async (event: React.FormEvent) => {
     event.preventDefault();
-
     if (!selectedNote) return;
 
     try {
@@ -47,10 +44,13 @@ const CreateNoteContainer = () => {
         title,
         content
       );
-      const updatedNotesList = notes.map((note) =>
-        note.id === selectedNote.id ? updatedNote : note
+      // Update only the selected note in the notes state
+      setNotes((prevNotes) =>
+        prevNotes.map((note) =>
+          note.id === selectedNote.id ? { ...note, ...updatedNote } : note
+        )
       );
-      setNotes(updatedNotesList);
+      //   onCreate(updatedNote); // Trigger the callback to update the parent state
       setTitle("");
       setContent("");
       setSelectedNote(null);
@@ -65,42 +65,41 @@ const CreateNoteContainer = () => {
     setSelectedNote(null);
   };
 
-  const deleteNote = async (event: React.MouseEvent, noteId: number) => {
-    event.stopPropagation();
-
-    try {
-      await NoteService.deleteNote(noteId);
-      const updatedNote = notes.filter((note) => note.id !== noteId);
-      setNotes(updatedNote);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
   return (
     <div className="create__note__container">
-      <h2>Add a new Note</h2>
-      <div className="create__note__wrapper">
-        <input
-          type="text"
-          required
-          placeholder="Title"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-        />
-        <textarea
-          rows={10}
-          placeholder="Take a note..."
-          required
-          value={content}
-          onChange={(e) => setContent(e.target.value)}
-        ></textarea>
-      </div>
-      <div className="btn__wrapper">
-        <button type="submit" className="btn add__note" onClick={handleAddNote}>
-          Add Note
-        </button>
-      </div>
+      <h2>{initialNote ? "Update Note" : "Add a new Note"}</h2>
+      <form
+        onSubmit={(event) =>
+          selectedNote ? handleUpdateNote(event) : handleAddNote(event)
+        }
+      >
+        <div className="create__note__wrapper">
+          <input
+            type="text"
+            required
+            placeholder="Title"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+          />
+          <textarea
+            rows={10}
+            placeholder="Take a note..."
+            required
+            value={content}
+            onChange={(e) => setContent(e.target.value)}
+          ></textarea>
+        </div>
+        <div className="btn__wrapper">
+          <button type="submit" className="btn add__note">
+            {selectedNote !== null ? "Update" : "Create Note"}
+          </button>
+          {selectedNote !== null && (
+            <button className="btn" onClick={handleCancel}>
+              {initialNote && "Cancel"}
+            </button>
+          )}
+        </div>
+      </form>
     </div>
   );
 };

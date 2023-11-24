@@ -16,7 +16,7 @@ const App: React.FC = () => {
     <>
       <Sidebar />
       <div className="a">
-        <CreateNoteContainer />
+        {/* <CreateNoteContainer /> */}
         <NotesContainer />
       </div>
       {/* <div className="app-container">
